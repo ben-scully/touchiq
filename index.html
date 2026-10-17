@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Touch Rugby Play Visualizer</title>
+  <!-- Load GSAP via CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <style>
+    body { background: #0f172a; color: white; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+    #field { width: 500px; height: 350px; background: #15803d; position: relative; border-radius: 8px; border: 2px solid #fff; }
+    .player { width: 30px; height: 30px; background: #2563eb; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; position: absolute; font-size: 12px; border: 2px solid white; }
+    .controls { margin-top: 15px; display: flex; gap: 10px; }
+    button { padding: 8px 16px; background: #3b82f6; border: none; color: white; font-weight: bold; border-radius: 4px; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+  <h2>Touch Rugby Play Visualizer (MVP)</h2>
+  <div id="field">
+    <div id="M1" class="player">M1</div>
+  </div>
+
+  <div class="controls">
+    <button onclick="tl.play()">Play</button>
+    <button onclick="tl.pause()">Pause</button>
+    <button onclick="tl.restart()">Restart</button>
+  </div>
+
+  <script>
+    // 1. Read DSL string from URL Hash (or use fallback default play)
+    const rawHash = window.location.hash.replace('#play=', '');
+    const dslText = rawHash ? decodeURIComponent(rawHash) : "M1: RUN(150,250 -> 250,150) -> DUMP";
+
+    // 2. Simple Parser: extract coordinates
+    function parseDSLLine(text) {
+      const coords = text.match(/\d+,\d+/g);
+      if (!coords) return null;
+      const [start, end] = coords.map(c => c.split(',').map(Number));
+      return { startX: start[0], startY: start[1], targetX: end[0], targetY: end[1] };
+    }
+
+    const playData = parseDSLLine(dslText);
+
+    // 3. Set Initial Position
+    gsap.set("#M1", { x: playData.startX, y: playData.startY });
+
+    // 4. Create GSAP Animation Timeline
+    const tl = gsap.timeline({ paused: true });
+    tl.to("#M1", { x: playData.targetX, y: playData.targetY, duration: 2, ease: "power1.inOut" });
+
+    // Auto-play on load
+    tl.play();
+  </script>
+</body>
+</html>
