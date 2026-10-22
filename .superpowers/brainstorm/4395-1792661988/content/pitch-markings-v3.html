@@ -1,0 +1,132 @@
+<style>
+  .play-card {
+    --ink: #17372d;
+    --muted: #5d7469;
+    color: var(--ink);
+  }
+  .play-card * { box-sizing: border-box; }
+  .play-card h2 { margin-bottom: 6px; }
+  .play-card .intro { margin: 0 0 20px; color: var(--muted); }
+  .play-layout {
+    display: grid;
+    grid-template-columns: minmax(280px, 1fr) minmax(230px, .8fr);
+    gap: 18px;
+    align-items: start;
+  }
+  .pitch {
+    padding: 10px;
+    border: 1px solid #d8e1d5;
+    border-radius: 10px;
+    background: #fff;
+  }
+  .pitch svg { display: block; width: 100%; max-height: 510px; }
+  .sequence { display: grid; gap: 10px; }
+  .step {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 10px;
+    align-items: start;
+    padding: 12px;
+    border: 1px solid #dce5da;
+    border-radius: 8px;
+    background: #fff;
+  }
+  .step b {
+    display: grid;
+    width: 26px;
+    height: 26px;
+    place-items: center;
+    border-radius: 50%;
+    background: #e7efe3;
+  }
+  .step strong { display: block; margin: 1px 0 3px; }
+  .step span { color: var(--muted); font-size: .9em; }
+  .play-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .play-controls button {
+    padding: 7px 12px;
+    border: 0;
+    border-radius: 5px;
+    background: #e7efe3;
+    color: var(--ink);
+    font: inherit;
+  }
+  .play-controls .play { background: #ed8065; color: white; }
+  .share-note {
+    margin-top: 15px;
+    padding: 12px;
+    border-left: 3px solid #ed8065;
+    background: #fff4ef;
+    color: var(--ink);
+    font-size: 13px;
+  }
+  @media (max-width: 650px) {
+    .play-layout { grid-template-columns: 1fr; }
+    .pitch svg { max-height: 460px; }
+  }
+</style>
+
+<div class="play-card">
+  <h2>Full pitch markings</h2>
+  <p class="intro">The 70 m playing length runs between try lines, with 7 m in-goal areas beyond each end.</p>
+  <div class="play-layout">
+    <div>
+      <div class="pitch">
+        <svg viewBox="0 0 610 840" role="img" aria-label="Top-down touch pitch with 7 metre in-goal areas and numbered distance labels outside the touchline">
+          <defs>
+            <marker id="arrow-coral-v3" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8 Z" fill="#f07d62"/>
+            </marker>
+            <marker id="arrow-blue-v3" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8 Z" fill="#65c0c5"/>
+            </marker>
+          </defs>
+          <rect x="3" y="3" width="494" height="834" rx="5" fill="#4d895f"/>
+          <rect x="3" y="3" width="494" height="70" fill="#3f7651"/>
+          <rect x="3" y="767" width="494" height="70" fill="#3f7651"/>
+          <rect x="3" y="3" width="494" height="834" rx="5" fill="none" stroke="#f5f2df" stroke-width="3"/>
+          <path d="M3 73 H497 M3 767 H497" stroke="#f5f2df" stroke-width="3"/>
+          <path d="M3 143 H497 M3 697 H497" stroke="#f5f2df" stroke-opacity=".8" stroke-width="2" stroke-dasharray="10 8"/>
+          <path d="M3 321 H497 M3 519 H497" stroke="#f5f2df" stroke-opacity=".65" stroke-width="2" stroke-dasharray="10 8"/>
+          <path d="M3 420 H497" stroke="#f5f2df" stroke-opacity=".8" stroke-width="2"/>
+          <g fill="#52695d" font-size="14" font-weight="700" font-family="sans-serif">
+            <text x="520" y="148">7m</text>
+            <text x="520" y="326">10m</text>
+            <text x="520" y="524">10m</text>
+            <text x="520" y="702">7m</text>
+          </g>
+          <path d="M215 665 C215 595 235 545 280 480" fill="none" stroke="#f07d62" stroke-width="5" marker-end="url(#arrow-coral-v3)"/>
+          <path d="M360 615 C330 565 300 520 270 480 C245 455 220 445 185 430" fill="none" stroke="#65c0c5" stroke-width="4" stroke-dasharray="10 7" marker-end="url(#arrow-blue-v3)"/>
+          <path d="M120 625 C165 580 205 535 230 490 C270 465 315 445 360 425" fill="none" stroke="#f2d16d" stroke-width="4" marker-end="url(#arrow-coral-v3)"/>
+          <circle cx="215" cy="665" r="18" fill="#f07d62" stroke="white" stroke-width="3"/>
+          <text x="215" y="670" text-anchor="middle" fill="#17372d" font-size="12" font-weight="bold" font-family="sans-serif">M1</text>
+          <circle cx="360" cy="615" r="18" fill="#65c0c5" stroke="white" stroke-width="3"/>
+          <text x="360" y="620" text-anchor="middle" fill="#17372d" font-size="12" font-weight="bold" font-family="sans-serif">M2</text>
+          <circle cx="120" cy="625" r="18" fill="#f2d16d" stroke="white" stroke-width="3"/>
+          <text x="120" y="630" text-anchor="middle" fill="#17372d" font-size="12" font-weight="bold" font-family="sans-serif">L1</text>
+          <ellipse cx="280" cy="480" rx="10" ry="7" fill="#f2d16d" stroke="#44391d" stroke-width="2"/>
+        </svg>
+      </div>
+      <div class="play-controls">
+        <button class="play" type="button">▶ Play</button>
+        <button type="button">↺ Restart</button>
+        <span>Phase 1 · 0:04</span>
+      </div>
+    </div>
+    <div>
+      <p class="label">MARKINGS</p>
+      <div class="sequence">
+        <div class="step"><b>7</b><div><strong>7 m in-goal at both ends</strong><span>Each area sits outside a try line.</span></div></div>
+        <div class="step"><b>7</b><div><strong>7 m lines</strong><span>Dashed marks measured in from each try line.</span></div></div>
+        <div class="step"><b>10</b><div><strong>10 m lines</strong><span>Dashed marks either side of halfway.</span></div></div>
+      </div>
+      <div class="share-note"><strong>Simple edge labels</strong><br>Distance numbers sit just outside the touchline, aligned with each dashed mark.</div>
+    </div>
+  </div>
+</div>

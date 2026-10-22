@@ -1,0 +1,142 @@
+<style>
+  .play-card {
+    --ink: #17372d;
+    --muted: #5d7469;
+    color: var(--ink);
+  }
+  .play-card * { box-sizing: border-box; }
+  .play-card h2 { margin-bottom: 6px; }
+  .play-card .intro { margin: 0 0 20px; color: var(--muted); }
+  .play-layout {
+    display: grid;
+    grid-template-columns: minmax(280px, 1fr) minmax(230px, .8fr);
+    gap: 18px;
+    align-items: start;
+  }
+  .pitch {
+    padding: 10px;
+    border: 1px solid #d8e1d5;
+    border-radius: 10px;
+    background: #fff;
+  }
+  .pitch svg { display: block; width: 100%; max-height: 510px; }
+  .sequence { display: grid; gap: 10px; }
+  .step {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 10px;
+    align-items: start;
+    padding: 12px;
+    border: 1px solid #dce5da;
+    border-radius: 8px;
+    background: #fff;
+  }
+  .step b {
+    display: grid;
+    width: 26px;
+    height: 26px;
+    place-items: center;
+    border-radius: 50%;
+    background: #e7efe3;
+  }
+  .step strong { display: block; margin: 1px 0 3px; }
+  .step span { color: var(--muted); font-size: .9em; }
+  .play-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .play-controls button {
+    padding: 7px 12px;
+    border: 0;
+    border-radius: 5px;
+    background: #e7efe3;
+    color: var(--ink);
+    font: inherit;
+  }
+  .play-controls .play { background: #ed8065; color: white; }
+  .share-note {
+    margin-top: 15px;
+    padding: 12px;
+    border-left: 3px solid #ed8065;
+    background: #fff4ef;
+    color: var(--ink);
+    font-size: 13px;
+  }
+  @media (max-width: 650px) {
+    .play-layout { grid-template-columns: 1fr; }
+    .pitch svg { max-height: 460px; }
+  }
+</style>
+
+<div class="play-card">
+  <h2>Six on six</h2>
+  <p class="intro">Both teams use the same position names. Labels are shown left to right from the attacking team's perspective.</p>
+  <div class="play-layout">
+    <div>
+      <div class="pitch">
+        <svg viewBox="0 0 500 840" role="img" aria-label="Touch pitch with six attackers and six defenders, both labelled L1 L2 L3 R3 R2 R1 from the attacking perspective">
+          <rect x="3" y="3" width="494" height="834" rx="5" fill="#4d895f"/>
+          <rect x="3" y="3" width="494" height="70" fill="#3f7651"/>
+          <rect x="3" y="767" width="494" height="70" fill="#3f7651"/>
+          <rect x="3" y="3" width="494" height="834" rx="5" fill="none" stroke="#f5f2df" stroke-width="3"/>
+          <path d="M3 73 H497 M3 767 H497" stroke="#f5f2df" stroke-width="3"/>
+          <path d="M3 143 H497 M3 697 H497" stroke="#f5f2df" stroke-opacity=".8" stroke-width="2" stroke-dasharray="10 8"/>
+          <path d="M3 321 H497 M3 519 H497" stroke="#f5f2df" stroke-opacity=".65" stroke-width="2" stroke-dasharray="10 8"/>
+          <path d="M3 420 H497" stroke="#f5f2df" stroke-opacity=".8" stroke-width="2"/>
+          <g fill="#f5f2df" stroke="#3f7651" stroke-width="4" paint-order="stroke" font-size="14" font-weight="700" font-family="sans-serif">
+            <text x="484" y="148" text-anchor="end">7m</text>
+            <text x="484" y="326" text-anchor="end">10m</text>
+            <text x="484" y="524" text-anchor="end">10m</text>
+            <text x="484" y="702" text-anchor="end">7m</text>
+          </g>
+          <g font-family="sans-serif" font-size="11" font-weight="700" text-anchor="middle">
+            <g fill="#65c0c5" stroke="#fff" stroke-width="2">
+              <circle cx="50" cy="265" r="20"/><circle cx="130" cy="245" r="20"/>
+              <circle cx="210" cy="265" r="20"/><circle cx="290" cy="265" r="20"/>
+              <circle cx="370" cy="245" r="20"/><circle cx="450" cy="265" r="20"/>
+            </g>
+            <g fill="#17372d" stroke="none">
+              <text x="50" y="269">L1</text><text x="130" y="249">L2</text>
+              <text x="210" y="269">L3</text><text x="290" y="269">R3</text>
+              <text x="370" y="249">R2</text><text x="450" y="269">R1</text>
+            </g>
+            <g fill="#f07d62" stroke="#fff" stroke-width="2">
+              <circle cx="50" cy="605" r="20"/><circle cx="130" cy="585" r="20"/>
+              <circle cx="210" cy="605" r="20"/><circle cx="290" cy="605" r="20"/>
+              <circle cx="370" cy="585" r="20"/><circle cx="450" cy="605" r="20"/>
+            </g>
+            <g fill="#17372d" stroke="none">
+              <text x="50" y="609">L1</text><text x="130" y="589">L2</text>
+              <text x="210" y="609">L3</text><text x="290" y="609">R3</text>
+              <text x="370" y="589">R2</text><text x="450" y="609">R1</text>
+            </g>
+          </g>
+          <g font-family="sans-serif" font-size="12" font-weight="700">
+            <circle cx="30" cy="790" r="7" fill="#f07d62"/><text x="44" y="794" fill="white">ATTACK</text>
+            <circle cx="135" cy="790" r="7" fill="#65c0c5"/><text x="149" y="794" fill="white">DEFENCE</text>
+          </g>
+        </svg>
+      </div>
+      <div class="play-controls">
+        <button class="play" type="button">▶ Play</button>
+        <button type="button">↺ Restart</button>
+        <span>Set the shape, then add movement</span>
+      </div>
+    </div>
+    <div>
+      <p class="label">PLAYER POSITIONS</p>
+      <div class="sequence">
+        <div class="step"><b>A</b><div><strong>Attack</strong><span>L1, L2, L3, R3, R2, R1.</span></div></div>
+        <div class="step"><b>D</b><div><strong>Defence</strong><span>Uses the same six labels: L1, L2, L3, R3, R2, R1.</span></div></div>
+        <div class="step"><b>1</b><div><strong>Wing</strong><span>Positions L1 and R1.</span></div></div>
+        <div class="step"><b>2</b><div><strong>Link</strong><span>Positions L2 and R2.</span></div></div>
+        <div class="step"><b>3</b><div><strong>Middle</strong><span>Positions L3 and R3.</span></div></div>
+      </div>
+      <div class="share-note"><strong>Same labels for both teams</strong><br>Team colour distinguishes attack and defence; the labels identify each side's corresponding position.</div>
+    </div>
+  </div>
+</div>

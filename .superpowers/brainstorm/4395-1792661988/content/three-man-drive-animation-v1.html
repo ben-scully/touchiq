@@ -1,0 +1,222 @@
+<style>
+  .play-card {
+    --ink: #17372d;
+    --muted: #5d7469;
+    color: var(--ink);
+  }
+  .play-card * { box-sizing: border-box; }
+  .play-card h2 { margin-bottom: 6px; }
+  .play-card .intro { margin: 0 0 18px; color: var(--muted); }
+  .play-layout {
+    display: grid;
+    grid-template-columns: minmax(280px, 1fr) minmax(230px, .8fr);
+    gap: 18px;
+    align-items: start;
+  }
+  .pitch {
+    padding: 10px;
+    border: 1px solid #d8e1d5;
+    border-radius: 10px;
+    background: #fff;
+  }
+  .pitch svg { display: block; width: 100%; max-height: 590px; }
+  .controls { display: flex; align-items: center; gap: 10px; margin: 0 0 10px; }
+  .toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 11px;
+    border-radius: 5px;
+    background: #e7efe3;
+    color: var(--ink);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  #pause-drive { accent-color: #ed8065; }
+  .replay {
+    color: #315b42;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .replay:hover { text-decoration: underline; }
+  .drive-svg .runner, .drive-svg .defender, .drive-svg .ball, .drive-svg .phase {
+    animation-play-state: running;
+    animation-iteration-count: 1;
+    animation-fill-mode: both;
+    animation-duration: 12s;
+    animation-timing-function: linear;
+  }
+  #pause-drive:checked ~ .pitch .drive-svg .runner,
+  #pause-drive:checked ~ .pitch .drive-svg .defender,
+  #pause-drive:checked ~ .pitch .drive-svg .ball,
+  #pause-drive:checked ~ .pitch .drive-svg .phase { animation-play-state: paused; }
+  .runner, .defender, .ball { transform-box: fill-box; transform-origin: center; }
+  .runner-l3 { animation-name: carry; }
+  .runner-l2 { animation-name: support-left; }
+  .runner-r3 { animation-name: support-right; }
+  .defender-d3 { animation-name: close-middle; }
+  .defender-d2 { animation-name: close-left; }
+  .defender-d4 { animation-name: close-right; }
+  .ball { animation-name: ball-carry; }
+  .phase-one { animation-name: show-setup; }
+  .phase-two { animation-name: show-drive; }
+  .phase-three { animation-name: show-contact; }
+  @keyframes carry {
+    0%, 12% { transform: translate(0, 0); }
+    48%, 100% { transform: translate(0, -132px); }
+  }
+  @keyframes ball-carry {
+    0%, 12% { transform: translate(0, 0); }
+    48%, 100% { transform: translate(5px, -132px); }
+  }
+  @keyframes support-left {
+    0%, 15% { transform: translate(0, 0); }
+    55%, 100% { transform: translate(48px, -76px); }
+  }
+  @keyframes support-right {
+    0%, 15% { transform: translate(0, 0); }
+    55%, 100% { transform: translate(-38px, -76px); }
+  }
+  @keyframes close-middle {
+    0%, 12% { transform: translate(0, 0); }
+    48%, 100% { transform: translate(0, 170px); }
+  }
+  @keyframes close-left {
+    0%, 12% { transform: translate(0, 0); }
+    48%, 100% { transform: translate(14px, 150px); }
+  }
+  @keyframes close-right {
+    0%, 12% { transform: translate(0, 0); }
+    48%, 100% { transform: translate(-14px, 150px); }
+  }
+  @keyframes show-setup {
+    0%, 21% { opacity: 1; }
+    25%, 100% { opacity: 0; }
+  }
+  @keyframes show-drive {
+    0%, 21% { opacity: 0; }
+    25%, 54% { opacity: 1; }
+    58%, 100% { opacity: 0; }
+  }
+  @keyframes show-contact {
+    0%, 54% { opacity: 0; }
+    58%, 100% { opacity: 1; }
+  }
+  .steps { display: grid; gap: 10px; }
+  .step {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 10px;
+    align-items: start;
+    padding: 12px;
+    border: 1px solid #dce5da;
+    border-radius: 8px;
+    background: #fff;
+  }
+  .step b {
+    display: grid;
+    width: 26px;
+    height: 26px;
+    place-items: center;
+    border-radius: 50%;
+    background: #e7efe3;
+  }
+  .step strong { display: block; margin: 1px 0 3px; }
+  .step span { color: var(--muted); font-size: .9em; }
+  .note {
+    margin-top: 14px;
+    padding: 12px;
+    border-left: 3px solid #ed8065;
+    background: #fff4ef;
+    font-size: 13px;
+  }
+  @media (max-width: 650px) {
+    .play-layout { grid-template-columns: 1fr; }
+    .pitch svg { max-height: 500px; }
+  }
+</style>
+
+<div class="play-card">
+  <h2>Three-man drive · play-through</h2>
+  <p class="intro">An illustrative 12-second sequence: L3 carries, the middle defence closes, and L2/R3 arrive in support.</p>
+  <div class="play-layout">
+    <div>
+      <input id="pause-drive" type="checkbox" hidden>
+      <div class="controls">
+        <label class="toggle" for="pause-drive"><input type="checkbox" aria-label="Pause animation" onchange="document.getElementById('pause-drive').checked=this.checked"> Pause / resume</label>
+        <a class="replay" href="?">↻ Replay</a>
+      </div>
+      <div class="pitch">
+        <svg class="drive-svg" viewBox="0 0 500 840" role="img" aria-label="Animated three-man drive: L3 carries toward the defensive line while L2 and R3 support, and three defenders close">
+          <defs>
+            <marker id="drive-arrow-main-v1" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8 Z" fill="#f07d62"/>
+            </marker>
+            <marker id="drive-arrow-support-v1" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8 Z" fill="#f2d16d"/>
+            </marker>
+          </defs>
+          <rect x="3" y="3" width="494" height="834" rx="5" fill="#4d895f"/>
+          <rect x="3" y="3" width="494" height="70" fill="#3f7651"/>
+          <rect x="3" y="767" width="494" height="70" fill="#3f7651"/>
+          <rect x="3" y="3" width="494" height="834" rx="5" fill="none" stroke="#f5f2df" stroke-width="3"/>
+          <path d="M3 73 H497 M3 767 H497" stroke="#f5f2df" stroke-width="3"/>
+          <path d="M3 143 H497 M3 697 H497" stroke="#f5f2df" stroke-opacity=".8" stroke-width="2" stroke-dasharray="10 8"/>
+          <path d="M3 321 H497 M3 519 H497" stroke="#f5f2df" stroke-opacity=".65" stroke-width="2" stroke-dasharray="10 8"/>
+          <path d="M3 420 H497" stroke="#f5f2df" stroke-opacity=".8" stroke-width="2"/>
+          <g fill="#f5f2df" stroke="#3f7651" stroke-width="4" paint-order="stroke" font-size="14" font-weight="700" font-family="sans-serif">
+            <text x="484" y="148" text-anchor="end">7m</text>
+            <text x="484" y="326" text-anchor="end">10m</text>
+            <text x="484" y="524" text-anchor="end">10m</text>
+            <text x="484" y="702" text-anchor="end">7m</text>
+          </g>
+          <g font-family="sans-serif" font-size="11" font-weight="700" text-anchor="middle">
+            <g class="defender"><circle cx="50" cy="265" r="18" fill="#65c0c5" stroke="#fff" stroke-width="2"/><text x="50" y="269" fill="#17372d">L1</text></g>
+            <g class="defender defender-d2"><circle cx="130" cy="245" r="18" fill="#65c0c5" stroke="#fff" stroke-width="2"/><text x="130" y="249" fill="#17372d">L2</text></g>
+            <g class="defender defender-d3"><circle cx="210" cy="265" r="18" fill="#65c0c5" stroke="#fff" stroke-width="2"/><text x="210" y="269" fill="#17372d">L3</text></g>
+            <g class="defender defender-d4"><circle cx="290" cy="265" r="18" fill="#65c0c5" stroke="#fff" stroke-width="2"/><text x="290" y="269" fill="#17372d">R3</text></g>
+            <g class="defender"><circle cx="370" cy="245" r="18" fill="#65c0c5" stroke="#fff" stroke-width="2"/><text x="370" y="249" fill="#17372d">R2</text></g>
+            <g class="defender"><circle cx="450" cy="265" r="18" fill="#65c0c5" stroke="#fff" stroke-width="2"/><text x="450" y="269" fill="#17372d">R1</text></g>
+            <g class="runner"><circle cx="50" cy="605" r="18" fill="#f07d62" stroke="#fff" stroke-width="2"/><text x="50" y="609" fill="#17372d">L1</text></g>
+            <g class="runner runner-l2"><circle cx="130" cy="560" r="20" fill="#f07d62" stroke="#fff" stroke-width="2"/><text x="130" y="564" fill="#17372d">L2</text></g>
+            <g class="runner runner-l3"><circle cx="210" cy="605" r="20" fill="#f07d62" stroke="#fff" stroke-width="2"/><text x="210" y="609" fill="#17372d">L3</text></g>
+            <g class="runner runner-r3"><circle cx="290" cy="560" r="20" fill="#f07d62" stroke="#fff" stroke-width="2"/><text x="290" y="564" fill="#17372d">R3</text></g>
+            <g class="runner"><circle cx="370" cy="605" r="18" fill="#f07d62" stroke="#fff" stroke-width="2"/><text x="370" y="609" fill="#17372d">R2</text></g>
+            <g class="runner"><circle cx="450" cy="605" r="18" fill="#f07d62" stroke="#fff" stroke-width="2"/><text x="450" y="609" fill="#17372d">R1</text></g>
+          </g>
+          <path d="M210 584 C210 540 210 500 215 470" fill="none" stroke="#f07d62" stroke-width="5" marker-end="url(#drive-arrow-main-v1)"/>
+          <path d="M130 540 C145 515 160 490 184 470" fill="none" stroke="#f2d16d" stroke-width="4" stroke-dasharray="9 6" marker-end="url(#drive-arrow-support-v1)"/>
+          <path d="M290 540 C278 515 265 490 242 470" fill="none" stroke="#f2d16d" stroke-width="4" stroke-dasharray="9 6" marker-end="url(#drive-arrow-support-v1)"/>
+          <g class="ball"><circle cx="215" cy="586" r="7" fill="#f2d16d" stroke="#44391d" stroke-width="2"/></g>
+          <g class="phase phase-one" font-family="sans-serif" font-size="20" font-weight="700">
+            <rect x="122" y="355" width="256" height="42" rx="6" fill="#17372d" fill-opacity=".88"/>
+            <text x="250" y="383" fill="white" text-anchor="middle">1 · SET &amp; GO</text>
+          </g>
+          <g class="phase phase-two" font-family="sans-serif" font-size="20" font-weight="700">
+            <rect x="112" y="355" width="276" height="42" rx="6" fill="#17372d" fill-opacity=".88"/>
+            <text x="250" y="383" fill="white" text-anchor="middle">2 · DRIVE &amp; SUPPORT</text>
+          </g>
+          <g class="phase phase-three" font-family="sans-serif" font-size="20" font-weight="700">
+            <rect x="124" y="355" width="252" height="42" rx="6" fill="#17372d" fill-opacity=".88"/>
+            <text x="250" y="383" fill="white" text-anchor="middle">3 · TOUCH / CONTACT</text>
+          </g>
+          <g font-family="sans-serif" font-size="12" font-weight="700">
+            <circle cx="30" cy="790" r="7" fill="#f07d62"/><text x="44" y="794" fill="white">ATTACK</text>
+            <circle cx="135" cy="790" r="7" fill="#65c0c5"/><text x="149" y="794" fill="white">DEFENCE</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+    <div>
+      <p class="label">WHAT HAPPENS</p>
+      <div class="steps">
+        <div class="step"><b>1</b><div><strong>L3 takes the ball forward</strong><span>The middle runner attacks straight at the defensive line.</span></div></div>
+        <div class="step"><b>2</b><div><strong>L2 and R3 close in</strong><span>Support runners track just behind, either side of L3.</span></div></div>
+        <div class="step"><b>3</b><div><strong>Defence comes up</strong><span>The middle defenders close to meet the carrier; the motion holds at contact.</span></div></div>
+      </div>
+      <div class="note"><strong>Illustrative only.</strong> This shows a carry into contact, not what happens after the touch. Pause/resume the animation, or replay it to watch the sequence again.</div>
+    </div>
+  </div>
+</div>

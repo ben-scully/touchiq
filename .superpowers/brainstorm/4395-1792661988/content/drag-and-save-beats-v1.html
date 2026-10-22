@@ -1,0 +1,290 @@
+<style>
+  .demo { color: #17372d; }
+  .demo * { box-sizing: border-box; }
+  .demo h2 { margin: 0 0 6px; font: 500 28px Georgia, serif; }
+  .demo p { color: #5d7469; }
+  .demo-intro { margin: 0 0 18px; }
+  .demo-grid { display: grid; grid-template-columns: minmax(300px, 1.3fr) minmax(250px, .7fr); gap: 18px; align-items: start; }
+  .pitch-card, .side-card { padding: 14px; border: 1px solid #d8e1d5; border-radius: 9px; background: #fff; }
+  .pitch { display: block; width: 100%; max-height: 650px; touch-action: none; }
+  .player { cursor: grab; }
+  .player:active { cursor: grabbing; }
+  .player circle { stroke: white; stroke-width: 2.5; }
+  .player text { font: 700 10px "Avenir Next", Avenir, sans-serif; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+  .player.attacker circle { fill: #f07d62; }
+  .player.defender circle { fill: #65c0c5; }
+  .player.ball circle { fill: #f2d16d; stroke: #594c28; }
+  .player.ball text { font-size: 8px; }
+  .controls { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+  .controls button, .copy-button {
+    min-height: 37px; padding: 0 12px; border: 0; border-radius: 5px;
+    background: #e7efe3; color: #17372d; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer;
+  }
+  .controls .primary { background: #ed8065; color: white; }
+  .controls button:disabled { opacity: .45; cursor: default; }
+  .status { min-height: 18px; margin: 8px 0 12px; color: #5d7469; font-size: 12px; }
+  .beat-list { display: grid; gap: 7px; margin: 0; padding: 0; list-style: none; }
+  .beat-list button { width: 100%; padding: 10px; border: 1px solid #dce5da; border-radius: 6px; background: white; color: #17372d; text-align: left; cursor: pointer; }
+  .beat-list button[aria-current="step"] { border-color: #4d895f; background: #f0f5ed; }
+  .beat-list small { display: block; margin-top: 3px; color: #5d7469; }
+  .dsl { min-height: 130px; margin-top: 12px; padding: 10px; overflow: auto; border-radius: 6px; background: #f4f5ef; color: #264437; font: 12px/1.6 ui-monospace, Menlo, monospace; white-space: pre-wrap; }
+  .copy-button { margin-top: 8px; }
+  .key { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; color: #5d7469; font-size: 11px; }
+  .key span { display: inline-flex; align-items: center; gap: 5px; }
+  .swatch { width: 9px; height: 9px; border-radius: 50%; background: #f07d62; }
+  .swatch.def { background: #65c0c5; }
+  .swatch.ball { background: #f2d16d; }
+  .side-card h3 { margin: 0 0 10px; font-size: 14px; }
+  .side-card p { margin: 0 0 12px; font-size: 12px; line-height: 1.5; }
+  .hint { margin-top: 12px !important; padding: 10px; border-left: 3px solid #ed8065; background: #fff4ef; }
+  @media (max-width: 720px) { .demo-grid { grid-template-columns: 1fr; } .pitch { max-height: 65vh; } }
+</style>
+
+<div class="demo">
+  <h2>Drag players. Save each beat.</h2>
+  <p class="demo-intro">Prototype question: is it easier to show a play by moving players into position, saving the important moments, and letting the playbook record those snapshots?</p>
+  <div class="demo-grid">
+    <section class="pitch-card" aria-label="Interactive touch pitch">
+      <div class="controls">
+        <button class="primary" id="add-beat">Add beat</button>
+        <button id="play-beats">Play beats</button>
+        <button id="undo-beat">Undo last beat</button>
+        <button id="reset">Reset</button>
+      </div>
+      <svg class="pitch" id="pitch" viewBox="0 0 500 840" role="img" aria-label="Drag players and ball to set up the next moment">
+        <rect x="3" y="3" width="494" height="834" rx="5" fill="#4d895f"/>
+        <rect x="3" y="3" width="494" height="70" fill="#3f7651"/>
+        <rect x="3" y="767" width="494" height="70" fill="#3f7651"/>
+        <rect x="3" y="3" width="494" height="834" rx="5" fill="none" stroke="#f5f2df" stroke-width="3"/>
+        <path d="M3 73 H497 M3 767 H497" stroke="#f5f2df" stroke-width="3"/>
+        <path d="M3 143 H497 M3 697 H497 M3 321 H497 M3 519 H497" stroke="#f5f2df" stroke-opacity=".7" stroke-width="2" stroke-dasharray="10 8"/>
+        <path d="M3 420 H497" stroke="#f5f2df" stroke-opacity=".8" stroke-width="2"/>
+        <g fill="#f5f2df" stroke="#3f7651" stroke-width="4" paint-order="stroke" font-size="13" font-weight="700" font-family="sans-serif">
+          <text x="484" y="148" text-anchor="end">7m</text>
+          <text x="484" y="326" text-anchor="end">10m</text>
+          <text x="484" y="524" text-anchor="end">10m</text>
+          <text x="484" y="702" text-anchor="end">7m</text>
+        </g>
+        <g id="players"></g>
+      </svg>
+      <div class="key"><span><i class="swatch"></i>Attack</span><span><i class="swatch def"></i>Defence</span><span><i class="swatch ball"></i>Ball</span></div>
+      <p class="status" id="status" aria-live="polite">Drag a player or the ball. Add a beat when the positions look right.</p>
+    </section>
+    <aside class="side-card">
+      <h3>Saved moments</h3>
+      <p>Each beat stores the players’ positions. Select a beat to review it, then drag and add another. Adding after an earlier beat replaces the later beats.</p>
+      <ol class="beat-list" id="beat-list"></ol>
+      <h3 style="margin-top:18px">Compact position notes</h3>
+      <p>Only moved players are listed after the starting shape. These coordinates use X across and Y up the pitch.</p>
+      <pre class="dsl" id="dsl"></pre>
+      <button class="copy-button" id="copy">Copy position notes</button>
+      <p class="hint"><strong>Prototype only.</strong> This captures positions, not game actions. The DSL output is a compact sketch for checking whether beats communicate your play.</p>
+    </aside>
+  </div>
+</div>
+
+<script>
+  const initialPlayers = [
+    ["A.L1", "attacker", 60, 620], ["A.L2", "attacker", 132, 600], ["A.L3", "attacker", 204, 620],
+    ["A.R3", "attacker", 276, 620], ["A.R2", "attacker", 348, 600], ["A.R1", "attacker", 420, 620],
+    ["D.L1", "defender", 60, 265], ["D.L2", "defender", 132, 245], ["D.L3", "defender", 204, 265],
+    ["D.R3", "defender", 276, 265], ["D.R2", "defender", 348, 245], ["D.R1", "defender", 420, 265],
+    ["BALL", "ball", 184, 595]
+  ].map(([id, team, x, y]) => ({ id, team, x, y }));
+
+  const copyPositions = positions => positions.map(player => ({ ...player }));
+  const initialState = () => ({
+    beats: [{ name: "Starting shape", positions: copyPositions(initialPlayers) }],
+    current: 0,
+    positions: copyPositions(initialPlayers),
+    justChanged: "Starting shape loaded."
+  });
+  let state = initialState();
+  const svg = document.querySelector("#pitch");
+  const playersLayer = document.querySelector("#players");
+  const beatList = document.querySelector("#beat-list");
+  const dsl = document.querySelector("#dsl");
+  const status = document.querySelector("#status");
+  let dragging = null;
+  let playbackToken = 0;
+
+  function toPitchPoint(event) {
+    const point = svg.createSVGPoint();
+    point.x = event.clientX;
+    point.y = event.clientY;
+    return point.matrixTransform(svg.getScreenCTM().inverse());
+  }
+
+  function xyToPercent(player) {
+    return { x: Math.round((player.x - 3) / 494 * 100), y: Math.round((767 - player.y) / 694 * 100) };
+  }
+
+  function renderPlayers() {
+    playersLayer.replaceChildren();
+    state.positions.forEach(player => {
+      const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
+      group.setAttribute("class", `player ${player.team}`);
+      group.setAttribute("transform", `translate(${player.x} ${player.y})`);
+      group.dataset.id = player.id;
+      group.setAttribute("role", "button");
+      group.setAttribute("tabindex", "0");
+      group.setAttribute("aria-label", `${player.id}, drag to move`);
+      const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      circle.setAttribute("r", player.team === "ball" ? "10" : "14");
+      const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      label.setAttribute("y", player.team === "ball" ? "0.5" : "0");
+      label.textContent = player.team === "ball" ? "●" : player.id.split(".")[1];
+      group.append(circle, label);
+      group.addEventListener("pointerdown", event => {
+        if (event.button !== 0) return;
+        dragging = { id: player.id, group };
+        group.setPointerCapture(event.pointerId);
+        event.preventDefault();
+      });
+      group.addEventListener("pointermove", event => {
+        if (!dragging || dragging.id !== player.id) return;
+        const point = toPitchPoint(event);
+        player.x = Math.max(18, Math.min(482, point.x));
+        player.y = Math.max(18, Math.min(822, point.y));
+        group.setAttribute("transform", `translate(${player.x} ${player.y})`);
+        state.justChanged = `Moving ${player.id}.`;
+        renderDetails();
+      });
+      group.addEventListener("pointerup", () => { dragging = null; });
+      playersLayer.append(group);
+    });
+  }
+
+  function getDsl() {
+    return state.beats.slice(1).map((beat, index) => {
+      const previous = state.beats[index].positions;
+      const changes = beat.positions.flatMap(player => {
+        const before = previous.find(item => item.id === player.id);
+        if (Math.abs(before.x - player.x) < 1 && Math.abs(before.y - player.y) < 1) return [];
+        const { x, y } = xyToPercent(player);
+        return [`${player.id} ${x},${y}`];
+      });
+      return `${index + 1}: ${changes.length ? changes.join("  ") : "(no position changes)"}`;
+    }).join("\n");
+  }
+
+  function renderDetails() {
+    beatList.replaceChildren();
+    state.beats.forEach((beat, index) => {
+      const item = document.createElement("li");
+      const button = document.createElement("button");
+      button.type = "button";
+      button.setAttribute("aria-current", index === state.current ? "step" : "false");
+      button.innerHTML = `<strong>${index === 0 ? "Start" : `Beat ${index}`}</strong><small>${beat.name}</small>`;
+      button.addEventListener("click", () => {
+        state.current = index;
+        state.positions = copyPositions(beat.positions);
+        state.justChanged = `Showing ${beat.name}.`;
+        render();
+      });
+      item.append(button);
+      beatList.append(item);
+    });
+    dsl.textContent = getDsl() || "No saved beats yet.";
+    status.textContent = state.justChanged;
+    document.querySelector("#undo-beat").disabled = state.beats.length <= 1;
+  }
+
+  function render() { renderPlayers(); renderDetails(); }
+
+  function stopPlayback(message = "Playback stopped.") {
+    playbackToken += 1;
+    document.querySelector("#play-beats").textContent = "Play beats";
+    state.justChanged = message;
+    renderDetails();
+  }
+
+  function animateToBeat(targetPositions, token) {
+    const startPositions = copyPositions(state.positions);
+    const startTime = performance.now();
+    const duration = 900;
+    return new Promise(resolve => {
+      function frame(now) {
+        if (token !== playbackToken) return resolve(false);
+        const progress = Math.min((now - startTime) / duration, 1);
+        state.positions = targetPositions.map(target => {
+          const start = startPositions.find(player => player.id === target.id);
+          return {
+            ...target,
+            x: start.x + (target.x - start.x) * progress,
+            y: start.y + (target.y - start.y) * progress
+          };
+        });
+        state.positions.forEach(player => {
+          const group = playersLayer.querySelector(`[data-id="${player.id}"]`);
+          if (group) group.setAttribute("transform", `translate(${player.x} ${player.y})`);
+        });
+        if (progress < 1) requestAnimationFrame(frame);
+        else resolve(true);
+      }
+      requestAnimationFrame(frame);
+    });
+  }
+
+  async function playBeats() {
+    if (playbackToken && document.querySelector("#play-beats").textContent === "Stop") {
+      stopPlayback();
+      return;
+    }
+    const token = ++playbackToken;
+    document.querySelector("#play-beats").textContent = "Stop";
+    state.current = 0;
+    state.positions = copyPositions(state.beats[0].positions);
+    state.justChanged = "Playing from the starting shape.";
+    render();
+    for (let index = 1; index < state.beats.length; index += 1) {
+      const completed = await animateToBeat(state.beats[index].positions, token);
+      if (!completed) return;
+      state.current = index;
+      state.justChanged = `Playing beat ${index}.`;
+      renderDetails();
+    }
+    if (token === playbackToken) {
+      document.querySelector("#play-beats").textContent = "Play beats";
+      state.justChanged = "Playback complete.";
+      renderDetails();
+    }
+  }
+
+  document.querySelector("#add-beat").addEventListener("click", () => {
+    if (document.querySelector("#play-beats").textContent === "Stop") stopPlayback("Playback stopped to edit the play.");
+    state.beats = state.beats.slice(0, state.current + 1);
+    const number = state.current + 1;
+    const positions = copyPositions(state.positions);
+    state.beats.push({ name: `Beat ${number}`, positions });
+    state.current = state.beats.length - 1;
+    state.justChanged = `Beat ${number} saved. ${positions.length} positions captured.`;
+    render();
+  });
+
+  document.querySelector("#undo-beat").addEventListener("click", () => {
+    if (state.beats.length <= 1) return;
+    if (document.querySelector("#play-beats").textContent === "Stop") stopPlayback("Playback stopped to edit the play.");
+    state.beats.pop();
+    state.current = state.beats.length - 1;
+    state.positions = copyPositions(state.beats[state.current].positions);
+    state.justChanged = "Last beat removed.";
+    render();
+  });
+
+  document.querySelector("#reset").addEventListener("click", () => {
+    if (document.querySelector("#play-beats").textContent === "Stop") stopPlayback("Playback stopped to reset the play.");
+    state = initialState();
+    render();
+  });
+
+  document.querySelector("#play-beats").addEventListener("click", playBeats);
+
+  document.querySelector("#copy").addEventListener("click", async () => {
+    await navigator.clipboard.writeText(dsl.textContent);
+    state.justChanged = "Position notes copied.";
+    renderDetails();
+  });
+
+  render();
+</script>

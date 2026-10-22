@@ -1,0 +1,129 @@
+<style>
+  .play-card {
+    --ink: #17372d;
+    --muted: #5d7469;
+    --grass: #4d895f;
+    color: var(--ink);
+  }
+  .play-card * { box-sizing: border-box; }
+  .play-card h2 { margin-bottom: 6px; }
+  .play-card .intro { margin: 0 0 20px; color: var(--muted); }
+  .play-layout {
+    display: grid;
+    grid-template-columns: minmax(230px, .9fr) minmax(250px, 1.1fr);
+    gap: 18px;
+    align-items: start;
+  }
+  .pitch {
+    padding: 10px;
+    border: 1px solid #d8e1d5;
+    border-radius: 10px;
+    background: #fff;
+  }
+  .pitch svg { display: block; width: 100%; max-height: 430px; }
+  .sequence { display: grid; gap: 10px; }
+  .step {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 10px;
+    align-items: start;
+    padding: 12px;
+    border: 1px solid #dce5da;
+    border-radius: 8px;
+    background: #fff;
+  }
+  .step b {
+    display: grid;
+    width: 26px;
+    height: 26px;
+    place-items: center;
+    border-radius: 50%;
+    background: #e7efe3;
+  }
+  .step strong { display: block; margin: 1px 0 3px; }
+  .step span { color: var(--muted); font-size: .9em; }
+  .play-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .play-controls button {
+    padding: 7px 12px;
+    border: 0;
+    border-radius: 5px;
+    background: #e7efe3;
+    color: var(--ink);
+    font: inherit;
+  }
+  .play-controls .play { background: #ed8065; color: white; }
+  .share-note {
+    margin-top: 15px;
+    padding: 12px;
+    border-left: 3px solid #ed8065;
+    background: #fff4ef;
+    color: var(--ink);
+    font-size: 13px;
+  }
+  @media (max-width: 650px) {
+    .play-layout { grid-template-columns: 1fr; }
+    .pitch svg { max-height: 360px; }
+  }
+</style>
+
+<div class="play-card">
+  <h2>Share a game plan visually</h2>
+  <p class="intro">A coach-friendly play card: see the shape, follow the sequence, then share it with the team.</p>
+  <div class="play-layout">
+    <div>
+      <div class="pitch">
+        <svg viewBox="0 0 500 700" role="img" aria-label="Top-down touch pitch with player routes">
+          <defs>
+            <marker id="arrow-coral" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8 Z" fill="#f07d62"/>
+            </marker>
+            <marker id="arrow-blue" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8 Z" fill="#65c0c5"/>
+            </marker>
+          </defs>
+          <rect x="3" y="3" width="494" height="694" rx="5" fill="#4d895f"/>
+          <rect x="3" y="3" width="494" height="694" rx="5" fill="none" stroke="#f5f2df" stroke-width="3"/>
+          <path d="M3 73 H497 M3 350 H497 M3 627 H497" stroke="#f5f2df" stroke-opacity=".7" stroke-width="2"/>
+          <text x="250" y="48" fill="white" text-anchor="middle" font-size="15" font-family="sans-serif">TARGET TRY LINE · Y 100</text>
+          <text x="250" y="67" fill="white" text-anchor="middle" font-size="12" font-family="sans-serif">7 m line · Y 90</text>
+          <text x="250" y="340" fill="white" text-anchor="middle" font-size="12" font-family="sans-serif">HALFWAY · Y 50</text>
+          <text x="250" y="615" fill="white" text-anchor="middle" font-size="12" font-family="sans-serif">7 m line · Y 10</text>
+          <text x="250" y="678" fill="white" text-anchor="middle" font-size="15" font-family="sans-serif">ATTACKING TRY LINE · Y 0</text>
+          <text x="17" y="367" fill="white" font-size="12" font-family="sans-serif">X 0</text>
+          <text x="483" y="367" fill="white" text-anchor="end" font-size="12" font-family="sans-serif">X 100</text>
+          <path d="M215 570 C215 510 235 475 280 430" fill="none" stroke="#f07d62" stroke-width="5" marker-end="url(#arrow-coral)"/>
+          <path d="M360 520 C330 480 300 455 270 430 C245 405 220 390 185 370" fill="none" stroke="#65c0c5" stroke-width="4" stroke-dasharray="10 7" marker-end="url(#arrow-blue)"/>
+          <path d="M120 530 C165 500 205 470 230 440 C270 410 315 390 360 365" fill="none" stroke="#f2d16d" stroke-width="4" marker-end="url(#arrow-coral)"/>
+          <circle cx="215" cy="570" r="18" fill="#f07d62" stroke="white" stroke-width="3"/>
+          <text x="215" y="575" text-anchor="middle" fill="#17372d" font-size="12" font-weight="bold" font-family="sans-serif">M1</text>
+          <circle cx="360" cy="520" r="18" fill="#65c0c5" stroke="white" stroke-width="3"/>
+          <text x="360" y="525" text-anchor="middle" fill="#17372d" font-size="12" font-weight="bold" font-family="sans-serif">M2</text>
+          <circle cx="120" cy="530" r="18" fill="#f2d16d" stroke="white" stroke-width="3"/>
+          <text x="120" y="535" text-anchor="middle" fill="#17372d" font-size="12" font-weight="bold" font-family="sans-serif">L1</text>
+          <ellipse cx="280" cy="430" rx="10" ry="7" fill="#f2d16d" stroke="#44391d" stroke-width="2"/>
+        </svg>
+      </div>
+      <div class="play-controls">
+        <button class="play" type="button">▶ Play</button>
+        <button type="button">↺ Restart</button>
+        <span>Phase 1 · 0:04</span>
+      </div>
+    </div>
+    <div>
+      <p class="label">PHASE 1 · WIDE SWEEP</p>
+      <div class="sequence">
+        <div class="step"><b>1</b><div><strong>M1 carries up</strong><span>Draw the defence toward the middle.</span></div></div>
+        <div class="step"><b>2</b><div><strong>M2 supports inside</strong><span>Follow the dashed support route.</span></div></div>
+        <div class="step"><b>3</b><div><strong>L1 wraps wide</strong><span>Finish in space beyond halfway.</span></div></div>
+      </div>
+      <div class="share-note"><strong>One link for the whole team.</strong><br>Players can open the same play card, watch the movement, and follow the numbered steps.</div>
+    </div>
+  </div>
+</div>

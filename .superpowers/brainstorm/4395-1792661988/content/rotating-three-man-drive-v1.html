@@ -1,0 +1,157 @@
+<style>
+  .play-card { --ink: #17372d; --muted: #5d7469; color: var(--ink); }
+  .play-card * { box-sizing: border-box; }
+  .play-card h2 { margin-bottom: 6px; }
+  .play-card .intro { margin: 0 0 18px; color: var(--muted); }
+  .play-layout { display: grid; grid-template-columns: minmax(280px, 1fr) minmax(230px, .8fr); gap: 18px; align-items: start; }
+  .pitch { padding: 10px; border: 1px solid #d8e1d5; border-radius: 10px; background: #fff; }
+  .pitch svg { display: block; width: 100%; max-height: 590px; }
+  .controls { display: flex; align-items: center; gap: 10px; margin: 0 0 10px; }
+  .toggle { display: inline-flex; align-items: center; gap: 7px; padding: 7px 11px; border-radius: 5px; background: #e7efe3; color: var(--ink); cursor: pointer; font-size: 13px; font-weight: 700; }
+  .replay { color: #315b42; font-size: 13px; font-weight: 700; text-decoration: none; }
+  .replay:hover { text-decoration: underline; }
+  .sequence { display: grid; gap: 10px; }
+  .step { display: grid; grid-template-columns: 28px 1fr; gap: 10px; align-items: start; padding: 12px; border: 1px solid #dce5da; border-radius: 8px; background: #fff; }
+  .step b { display: grid; width: 26px; height: 26px; place-items: center; border-radius: 50%; background: #e7efe3; }
+  .step strong { display: block; margin: 1px 0 3px; }
+  .step span { color: var(--muted); font-size: .9em; }
+  .cycle { display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; margin-top: 14px; padding: 12px; border-radius: 8px; background: #edf2e9; font-size: 12px; font-weight: 700; text-align: center; }
+  .cycle span { color: #4d895f; font-size: 16px; }
+  .note { margin-top: 14px; padding: 12px; border-left: 3px solid #ed8065; background: #fff4ef; font-size: 13px; }
+  .motion { animation-duration: 16s; animation-iteration-count: infinite; animation-timing-function: linear; animation-fill-mode: both; animation-play-state: running; transform-box: fill-box; transform-origin: center; }
+  #pause-play:checked ~ .pitch .motion { animation-play-state: paused; }
+  .m1 { animation-name: m1path; }
+  .m2 { animation-name: m2path; }
+  .m3 { animation-name: m3path; }
+  .ball { animation-name: ballpath; }
+  .phase-one { animation-name: phaseOne; }
+  .phase-two { animation-name: phaseTwo; }
+  .phase-one, .phase-two { animation-duration: 16s; animation-iteration-count: infinite; animation-fill-mode: both; }
+  @keyframes m1path {
+    0%, 3% { transform: translate(0,0); }
+    12%, 59% { transform: translate(0,-76px); }
+    72%, 100% { transform: translate(8px,-164px); }
+  }
+  @keyframes m2path {
+    0%, 4% { transform: translate(0,0); }
+    14%, 31% { transform: translate(-8px,-107px); }
+    40%, 49% { transform: translate(-8px,-107px); }
+    57%, 66% { transform: translate(-8px,-107px); }
+    74%, 84% { transform: translate(52px,-208px); }
+    92%, 100% { transform: translate(52px,-208px); }
+  }
+  @keyframes m3path {
+    0%, 4% { transform: translate(0,0); }
+    15%, 35% { transform: translate(60px,-88px); }
+    42%, 52% { transform: translate(60px,-88px); }
+    61%, 68% { transform: translate(60px,-88px); }
+    76%, 100% { transform: translate(60px,-164px); }
+  }
+  @keyframes ballpath {
+    0%, 3% { transform: translate(0,0); }
+    12%, 30% { transform: translate(0,-76px); }
+    40%, 59% { transform: translate(8px,-88px); }
+    71%, 76% { transform: translate(8px,-164px); }
+    84%, 100% { transform: translate(16px,-176px); }
+  }
+  @keyframes phaseOne {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+  @keyframes phaseTwo {
+    0%, 49% { opacity: 0; }
+    50%, 100% { opacity: 1; }
+  }
+  @media (max-width: 650px) {
+    .play-layout { grid-template-columns: 1fr; }
+    .pitch svg { max-height: 500px; }
+  }
+</style>
+
+<div class="play-card">
+  <h2>Three-man drive · rotating roles</h2>
+  <p class="intro">Two phases from your example. Each pass moves the ball and rotates who drives, scoops, and receives.</p>
+  <div class="play-layout">
+    <div>
+      <input id="pause-play" type="checkbox" hidden>
+      <div class="controls">
+        <label class="toggle" for="pause-play"><input type="checkbox" aria-label="Pause animation" onchange="document.getElementById('pause-play').checked=this.checked"> Pause / resume</label>
+        <a class="replay" href="?">↻ Replay</a>
+      </div>
+      <div class="pitch">
+        <svg viewBox="0 0 500 840" role="img" aria-label="Animated two-phase three-player passing drill with M1 and M3 alternating drives, M2 and M1 scooping, and receivers M3 then M2">
+          <defs>
+            <marker id="pass-arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8 Z" fill="#f2d16d"/>
+            </marker>
+          </defs>
+          <rect x="3" y="3" width="494" height="834" rx="5" fill="#4d895f"/>
+          <rect x="3" y="3" width="494" height="70" fill="#3f7651"/>
+          <rect x="3" y="767" width="494" height="70" fill="#3f7651"/>
+          <rect x="3" y="3" width="494" height="834" rx="5" fill="none" stroke="#f5f2df" stroke-width="3"/>
+          <path d="M3 73 H497 M3 767 H497" stroke="#f5f2df" stroke-width="3"/>
+          <path d="M3 143 H497 M3 697 H497" stroke="#f5f2df" stroke-opacity=".8" stroke-width="2" stroke-dasharray="10 8"/>
+          <path d="M3 321 H497 M3 519 H497" stroke="#f5f2df" stroke-opacity=".65" stroke-width="2" stroke-dasharray="10 8"/>
+          <path d="M3 420 H497" stroke="#f5f2df" stroke-opacity=".8" stroke-width="2"/>
+          <g fill="#f5f2df" stroke="#3f7651" stroke-width="4" paint-order="stroke" font-size="14" font-weight="700" font-family="sans-serif">
+            <text x="484" y="148" text-anchor="end">7m</text>
+            <text x="484" y="326" text-anchor="end">10m</text>
+            <text x="484" y="524" text-anchor="end">10m</text>
+            <text x="484" y="702" text-anchor="end">7m</text>
+          </g>
+          <path d="M250 614 L250 538" stroke="#f07d62" stroke-width="4" stroke-dasharray="7 6"/>
+          <path d="M250 538 L258 526" stroke="#f2d16d" stroke-width="4" stroke-dasharray="7 6" marker-end="url(#pass-arrow)"/>
+          <path d="M258 526 L258 450" stroke="#f07d62" stroke-width="4" stroke-dasharray="7 6"/>
+          <path d="M258 450 L267 437" stroke="#f2d16d" stroke-width="4" stroke-dasharray="7 6" marker-end="url(#pass-arrow)"/>
+          <g fill="#65c0c5" stroke="#fff" stroke-width="2" font-family="sans-serif" font-size="10" font-weight="700" text-anchor="middle">
+            <circle cx="50" cy="255" r="17"/><circle cx="130" cy="235" r="17"/>
+            <circle cx="210" cy="255" r="17"/><circle cx="290" cy="255" r="17"/>
+            <circle cx="370" cy="235" r="17"/><circle cx="450" cy="255" r="17"/>
+          </g>
+          <g fill="#17372d" font-family="sans-serif" font-size="10" font-weight="700" text-anchor="middle">
+            <text x="50" y="259">L1</text><text x="130" y="239">L2</text><text x="210" y="259">L3</text>
+            <text x="290" y="259">R3</text><text x="370" y="239">R2</text><text x="450" y="259">R1</text>
+          </g>
+          <g class="m1 motion">
+            <circle cx="250" cy="614" r="14" fill="#f07d62" stroke="white" stroke-width="2"/>
+            <text x="250" y="617" fill="#17372d" text-anchor="middle" font-family="sans-serif" font-size="9" font-weight="700">M1</text>
+          </g>
+          <g class="m2 motion">
+            <circle cx="229" cy="645" r="14" fill="#f2d16d" stroke="white" stroke-width="2"/>
+            <text x="229" y="648" fill="#17372d" text-anchor="middle" font-family="sans-serif" font-size="9" font-weight="700">M2</text>
+          </g>
+          <g class="m3 motion">
+            <circle cx="216" cy="614" r="14" fill="#edaa70" stroke="white" stroke-width="2"/>
+            <text x="216" y="617" fill="#17372d" text-anchor="middle" font-family="sans-serif" font-size="9" font-weight="700">M3</text>
+          </g>
+          <g class="ball motion">
+            <ellipse cx="250" cy="614" rx="8" ry="5" fill="#fff3a6" stroke="#44391d" stroke-width="2"/>
+          </g>
+          <g class="phase-one motion" font-family="sans-serif" font-size="15" font-weight="700">
+            <rect x="102" y="356" width="296" height="40" rx="6" fill="#17372d" fill-opacity=".9"/>
+            <text x="250" y="382" fill="white" text-anchor="middle">PHASE 1 · M1 → M2 → M3</text>
+          </g>
+          <g class="phase-two motion" font-family="sans-serif" font-size="15" font-weight="700">
+            <rect x="102" y="356" width="296" height="40" rx="6" fill="#17372d" fill-opacity=".9"/>
+            <text x="250" y="382" fill="white" text-anchor="middle">PHASE 2 · M3 → M1 → M2</text>
+          </g>
+          <g font-family="sans-serif" font-size="12" font-weight="700">
+            <circle cx="30" cy="790" r="7" fill="#f07d62"/><text x="44" y="794" fill="white">ACTIVE ATTACKERS</text>
+            <circle cx="190" cy="790" r="7" fill="#65c0c5"/><text x="204" y="794" fill="white">DEFENCE</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+    <div>
+      <p class="label">THE BALL AND ROLE ROTATION</p>
+      <div class="sequence">
+        <div class="step"><b>1</b><div><strong>M1 drives and dumps</strong><span>Ball goes from (50,20) to (50,32).</span></div></div>
+        <div class="step"><b>2</b><div><strong>M2 scoops; M3 receives</strong><span>M2 runs to the dump, scoops, and passes to M3 at (52,34).</span></div></div>
+        <div class="step"><b>3</b><div><strong>M3 drives and dumps</strong><span>Carry to (52,46); M1 runs in and scoops.</span></div></div>
+        <div class="step"><b>4</b><div><strong>M1 passes; M2 receives</strong><span>Pass to M2 at (54,48) to complete the second phase.</span></div></div>
+      </div>
+      <div class="cycle">DUMPER <span>→</span> DUMMY HALF <span>→</span> RECEIVER <span>↻</span></div>
+      <div class="note"><strong>Possession rule.</strong><br>The ball travels with the player during DRIVE, stays at the dump point after DUMP, and moves to the next player on the scoop/pass/catch. Player markers shrink and fan slightly near the ball so labels stay legible.</div>
+    </div>
+  </div>
+</div>
